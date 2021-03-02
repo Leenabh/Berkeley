@@ -1,0 +1,73 @@
+---
+title: 'Lab 1: Question 2: Are Democratic voters more enthusiastic about Joe Biden or Kamala Harris?'
+author: "Your Names Here"
+output: pdf_document
+---
+
+```{r load packages, echo=TRUE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2) 
+library(tidyverse) # if you want more, but still core, toolkit
+library(haven)
+```
+
+```{r load and clean data, echo=FALSE, warning=TRUE, message=FALSE}
+52.62192 - 56.02387
+```
+
+```{r}
+# SAS
+anes_2020 = read_dta("anes_timeseries_2020_stata_20210211.dta")
+```
+
+
+
+## Importance and Context
+<!-- You can (and should delete each of these comments lines in your final report) --> 
+<!-- Explain why the reader should care about your research question. -->
+
+```{r}
+subsetAnes = anes_2020 %>% 
+  filter(V201018 == 1) %>%
+  filter(V201100  != 5) %>%
+  filter(V201151 <= 100 & V201151 >=0) %>%
+  filter(V201153 <= 100 &  V201153 >= 0) %>%
+  mutate ('temp' = V201151-V201153) %>%
+  select(V201151, V201153, temp)
+```
+
+```{r}
+names(subsetAnes) = c("Joe", "Kamala")
+```
+```{r}
+plot(subsetAnes$Joe, subsetAnes$Kamala)
+```
+```{r}
+subsetAnes %>% 
+  ggplot(aes(x=Joe, y=Kamala)) + 
+  geom_point() + 
+  labs(
+    title = 'Scatter Plot of enthusiasm of Joe and Kamala' , 
+    x = 'Enthusiasm for Joe', 
+    y = 'Enthusiasm for Kamala') + 
+  geom_smooth(method = "lm")
+```
+
+
+## Description of Data
+<!-- Explain how your research question is operationalized, including whether the variables you create are appropriate to study the concepts in question. --> 
+```{r}
+t.test(subsetAnes$Joe, subsetAnes$Kamala, paired=T)
+```
+
+
+<!-- What are some basic features of the data distribution? --> 
+<!-- What changes do you make to the data and why? --> 
+
+## Most appropriate test 
+<!-- Explain which test is the most appropriate to answer your question and why it is the most appropriate --> 
+<!-- List every assumption that your test requires and evaluate it. -->
+
+## Test, results and interpretation
+<!-- What are the results of your test? --> 
+<!-- What do the results of this test mean? What is the practical significance? --> 
