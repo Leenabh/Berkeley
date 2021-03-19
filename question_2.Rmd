@@ -30,15 +30,27 @@ anes_2020 = read_dta("anes_timeseries_2020_stata_20210211.dta")
 subsetAnes = anes_2020 %>% 
   filter(V201018 == 1) %>%
   filter(V201100  != 5) %>%
+  filter(V201100  != -1) %>%
   filter(V201151 <= 100 & V201151 >=0) %>%
   filter(V201153 <= 100 &  V201153 >= 0) %>%
   mutate ('temp' = V201151-V201153) %>%
-  select(V201151, V201153, temp)
+  filter(temp != 0) %>%
+  mutate('tempbool' = temp > 0) %>%
+  select(V201151, V201153, temp, tempbool)
+
+
 ```
 
 ```{r}
-names(subsetAnes) = c("Joe", "Kamala")
+names(subsetAnes) = c("Joe", "Kamala", "Diff", "DiffBool")
 ```
+
+
+```{r}
+binom.test(sum(subsetAnes$DiffBool), nrow(subsetAnes))
+```
+
+
 ```{r}
 plot(subsetAnes$Joe, subsetAnes$Kamala)
 ```
@@ -60,6 +72,9 @@ subsetAnes %>%
 t.test(subsetAnes$Joe, subsetAnes$Kamala, paired=T)
 ```
 
+```{r}
+wilcox.test(subsetAnes$Joe, subsetAnes$Kamala)
+```
 
 <!-- What are some basic features of the data distribution? --> 
 <!-- What changes do you make to the data and why? --> 

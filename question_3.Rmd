@@ -27,22 +27,21 @@ subsetAnes = anes_2020 %>%
   filter(V201145 == 1 | V201145 == 2) %>%
   filter(V201624 == 1 | V201624 == 2) %>%
   filter(V201625 == 1 | V201625 == 2) %>%
-  mutate(Pass.Fail = ifelse(V201624 == 1 | V201625 == 1, "Covid", "No Covid")) %>%
-  select(V201145, V201624, V201625, Pass.Fail)
+  mutate(HasCovid = ifelse(V201624 == 1 | V201625 == 1, "Covid", "No Covid")) %>%
+  mutate (Approves = V201145 == 1) %>%
+  select(Approves, HasCovid)
 ```
 
 ```{r}
-table(subsetAnes$V201145)
+table(subsetAnes$Approves, subsetAnes$HasCovid)
 ```
 
-```{r}
-table(subsetAnes$V201145,subsetAnes$Pass.Fail)
-```
 
 
 ```{r}
-t.test(subsetAnes$V201145 ~ subsetAnes$Pass.Fail)
+t.test(subsetAnes$Approves ~ subsetAnes$HasCovid)
 ```
+
 
 ## Description of Data
 <!-- Explain how your research question is operationalized, including whether the variables you create are appropriate to study the concepts in question. --> 
